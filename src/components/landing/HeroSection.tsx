@@ -8,9 +8,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const BASE_STREAMS = [
-  { url: "https://www.youtube.com/embed/AMRtN98PyUY?list=RDAMRtN98PyUY&autoplay=1&mute=1", label: "LIVING | Hesse Kassel" },
-  { url: "https://www.youtube.com/embed/AKcmOnFu1SQ?list=RDAKcmOnFu1SQ&autoplay=1&mute=1", label: "Candelabro — Lollapalooza 2026" },
-  { url: "https://www.youtube.com/embed/Fo89b8zAIE4?list=RDFo89b8zAIE4&autoplay=1&mute=1", label: "Rusowsky: Tiny Desk" },
+  { url: "https://www.youtube.com/embed/om4VRC4TU_o?autoplay=1&mute=0", label: "Finger Tracking — TouchDesigner" },
+  { url: "https://www.youtube.com/embed/AKcmOnFu1SQ?list=RDAKcmOnFu1SQ&autoplay=1&mute=0", label: "Candelabro — Lollapalooza 2026" },
+  { url: "https://www.youtube.com/embed/Fo89b8zAIE4?list=RDFo89b8zAIE4&autoplay=1&mute=0", label: "Rusowsky: Tiny Desk" },
 ];
 
 function StreamCarousel() {
