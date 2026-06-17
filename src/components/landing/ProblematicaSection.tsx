@@ -19,7 +19,7 @@ const hallazgos = [
     titulo: "Baja permanencia",
     descripcion:
       "Más del 72% de los peatones en el eje Cra. 5.ª/Tadeo son flujos de tránsito puro. No generan pausas urbanas ni estancias en el espacio público.",
-    acento: "#F7E49B",
+    acento: "#b07d0e",
     stat: "72%",
   },
   {
@@ -61,8 +61,8 @@ export default function ProblematicaSection() {
     <section
       ref={sectionRef}
       style={{
-        background: "var(--negro)",
-        color: "var(--crema)",
+        background: "var(--crema)",
+        color: "var(--negro)",
         padding: "8rem clamp(1.5rem, 6vw, 6rem)",
         position: "relative",
         overflow: "hidden",
@@ -77,7 +77,7 @@ export default function ProblematicaSection() {
           width: "500px",
           height: "500px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(186,90,90,0.05) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(186,90,90,0.07) 0%, transparent 70%)",
           pointerEvents: "none",
         }}
       />
@@ -112,7 +112,7 @@ export default function ProblematicaSection() {
           style={{
             fontSize: "1rem",
             lineHeight: 1.7,
-            color: "rgba(250,248,244,0.55)",
+            color: "rgba(17,17,17,0.6)",
             maxWidth: "680px",
             marginBottom: "5rem",
           }}
@@ -127,7 +127,7 @@ export default function ProblematicaSection() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
             gap: "0px",
-            border: "1px solid rgba(250,248,244,0.06)",
+            border: "1px solid rgba(17,17,17,0.1)",
           }}
         >
           {hallazgos.map((h) => (
@@ -136,7 +136,7 @@ export default function ProblematicaSection() {
               className="prob-col"
               style={{
                 padding: "3rem 2.5rem",
-                borderRight: "1px solid rgba(250,248,244,0.06)",
+                borderRight: "1px solid rgba(17,17,17,0.1)",
                 display: "flex",
                 flexDirection: "column",
                 gap: "1.2rem",
@@ -174,7 +174,7 @@ export default function ProblematicaSection() {
                 style={{
                   fontSize: "0.88rem",
                   lineHeight: 1.7,
-                  color: "rgba(250,248,244,0.55)",
+                  color: "rgba(17,17,17,0.6)",
                 }}
               >
                 {h.descripcion}
