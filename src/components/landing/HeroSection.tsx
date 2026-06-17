@@ -270,13 +270,16 @@ export default function HeroSection() {
   return (
     <section
       ref={sectionRef}
+      data-hero=""
       style={{
         minHeight: "100svh",
         display: "grid",
         gridTemplateColumns: "1fr 1fr",
-        alignItems: "center",
-        padding: "0 clamp(1.5rem, 5vw, 5rem)",
-        gap: "3rem",
+        gridTemplateAreas: '"text carousel" "btn carousel"',
+        gridTemplateRows: "1fr auto",
+        padding: "clamp(5rem, 10vh, 7rem) clamp(1.5rem, 5vw, 5rem) clamp(7rem, 12vh, 9rem)",
+        columnGap: "3rem",
+        rowGap: "2rem",
         background: "var(--oscuro)",
         position: "relative",
         overflow: "hidden",
@@ -310,8 +313,16 @@ export default function HeroSection() {
         }}
       />
 
-      {/* Left: text */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+      {/* Grid area: text */}
+      <div
+        style={{
+          gridArea: "text",
+          alignSelf: "center",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1.5rem",
+        }}
+      >
         <div>
           <p
             style={{
@@ -352,40 +363,15 @@ export default function HeroSection() {
             para transformar el territorio.
           </p>
         </div>
-
-        <button
-          ref={ctaRef}
-          onClick={scrollToNext}
-          style={{
-            alignSelf: "flex-start",
-            padding: "1rem 2.5rem",
-            background: "transparent",
-            border: "1px solid var(--coral)",
-            color: "var(--crema)",
-            fontSize: "0.85rem",
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            cursor: "none",
-            transition: "background 0.3s, color 0.3s",
-          }}
-          onMouseEnter={(e) => {
-            (e.target as HTMLElement).style.background = "var(--coral)";
-            (e.target as HTMLElement).style.color = "var(--crema)";
-          }}
-          onMouseLeave={(e) => {
-            (e.target as HTMLElement).style.background = "transparent";
-            (e.target as HTMLElement).style.color = "var(--crema)";
-          }}
-        >
-          Descubre el CDC
-        </button>
       </div>
 
-      {/* Right: stream carousel */}
+      {/* Grid area: carousel */}
       <div
         ref={streamRef}
+        data-stream-carousel=""
         style={{
-          height: "clamp(300px, 45vw, 560px)",
+          gridArea: "carousel",
+          minHeight: "clamp(300px, 45vw, 560px)",
           position: "relative",
           paddingBottom: "2rem",
         }}
@@ -435,9 +421,41 @@ export default function HeroSection() {
         />
       </div>
 
+      {/* Grid area: btn — separado del div de texto para poder reordenarlo en móvil */}
+      <button
+        ref={ctaRef}
+        data-cta=""
+        onClick={scrollToNext}
+        style={{
+          gridArea: "btn",
+          alignSelf: "start",
+          justifySelf: "start",
+          padding: "1rem 2.5rem",
+          background: "transparent",
+          border: "1px solid var(--coral)",
+          color: "var(--crema)",
+          fontSize: "0.85rem",
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          cursor: "none",
+          transition: "background 0.3s, color 0.3s",
+        }}
+        onMouseEnter={(e) => {
+          (e.target as HTMLElement).style.background = "var(--coral)";
+          (e.target as HTMLElement).style.color = "var(--crema)";
+        }}
+        onMouseLeave={(e) => {
+          (e.target as HTMLElement).style.background = "transparent";
+          (e.target as HTMLElement).style.color = "var(--crema)";
+        }}
+      >
+        Descubre el CDC
+      </button>
+
       {/* Scroll indicator — botón funcional */}
       <button
         ref={bajaRef}
+        data-baja=""
         onClick={scrollToNext}
         style={{
           position: "absolute",
@@ -476,7 +494,20 @@ export default function HeroSection() {
         @media (max-width: 768px) {
           section[data-hero] {
             grid-template-columns: 1fr !important;
+            grid-template-areas: "text" "carousel" "btn" !important;
+            grid-template-rows: auto !important;
             padding-top: 6rem !important;
+            row-gap: 2.5rem !important;
+          }
+          section[data-hero] [data-stream-carousel] {
+            min-height: clamp(220px, 75vw, 420px) !important;
+          }
+          section[data-hero] [data-cta] {
+            justify-self: center !important;
+            cursor: pointer !important;
+          }
+          section[data-hero] [data-baja] {
+            display: none !important;
           }
         }
       `}</style>
