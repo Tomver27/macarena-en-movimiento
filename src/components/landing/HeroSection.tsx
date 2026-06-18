@@ -272,7 +272,7 @@ export default function HeroSection() {
       ref={sectionRef}
       data-hero=""
       style={{
-        minHeight: "100svh",
+        height: "100svh",
         display: "grid",
         gridTemplateColumns: "1fr 1fr",
         gridTemplateAreas: '"text carousel" "btn carousel"',
@@ -493,6 +493,8 @@ export default function HeroSection() {
       <style>{`
         @media (max-width: 768px) {
           section[data-hero] {
+            height: auto !important;
+            min-height: 100svh !important;
             grid-template-columns: 1fr !important;
             grid-template-areas: "text" "carousel" "btn" !important;
             grid-template-rows: auto !important;

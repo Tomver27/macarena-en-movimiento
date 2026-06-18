@@ -98,7 +98,14 @@ export default function LoteSection() {
             marginBottom: "3.5rem",
           }}
         >
-          Calle 26 Bis #4-88
+          <a
+            href="https://maps.app.goo.gl/V2tuZhkSpg7AwbLW8"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "inherit", textDecoration: "none", borderBottom: "1px solid rgba(247,228,155,0.4)", paddingBottom: "2px" }}
+          >
+            Calle 26 Bis #4-88
+          </a>
           <br />
           <span style={{ color: "var(--amarillo)", fontSize: "0.65em" }}>
             La Macarena, Bogotá
@@ -202,7 +209,7 @@ export default function LoteSection() {
             />
             <iframe
               title="Mapa barrio La Macarena, Bogotá"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=-74.0760%2C4.6060%2C-74.0640%2C4.6150&layer=mapnik&marker=4.6097%2C-74.0706"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-74.0734%2C4.6053%2C-74.0614%2C4.6143&layer=mapnik&marker=4.6098%2C-74.0674"
               style={{
                 width: "100%",
                 height: "420px",
