@@ -8,9 +8,18 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const BASE_STREAMS = [
-  { url: "https://www.youtube.com/embed/om4VRC4TU_o?autoplay=1&mute=0", label: "Finger Tracking — TouchDesigner" },
-  { url: "https://www.youtube.com/embed/AKcmOnFu1SQ?list=RDAKcmOnFu1SQ&autoplay=1&mute=0", label: "Candelabro — Lollapalooza 2026" },
-  { url: "https://www.youtube.com/embed/Fo89b8zAIE4?list=RDFo89b8zAIE4&autoplay=1&mute=0", label: "Rusowsky: Tiny Desk" },
+  {
+    url: process.env.NEXT_PUBLIC_STREAM_1_URL ?? "https://www.youtube.com/embed/om4VRC4TU_o?autoplay=1&mute=0",
+    label: process.env.NEXT_PUBLIC_STREAM_1_LABEL ?? "Finger Tracking — TouchDesigner",
+  },
+  {
+    url: process.env.NEXT_PUBLIC_STREAM_2_URL ?? "https://www.youtube.com/embed/AKcmOnFu1SQ?list=RDAKcmOnFu1SQ&autoplay=1&mute=0",
+    label: process.env.NEXT_PUBLIC_STREAM_2_LABEL ?? "Candelabro — Lollapalooza 2026",
+  },
+  {
+    url: process.env.NEXT_PUBLIC_STREAM_3_URL ?? "https://www.youtube.com/embed/Fo89b8zAIE4?list=RDFo89b8zAIE4&autoplay=1&mute=0",
+    label: process.env.NEXT_PUBLIC_STREAM_3_LABEL ?? "Rusowsky: Tiny Desk",
+  },
 ];
 
 function StreamCarousel() {
@@ -22,6 +31,8 @@ function StreamCarousel() {
     : BASE_STREAMS;
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isOffline, setIsOffline] = useState(false);
+  const [videoError, setVideoError] = useState(false);
 
   const rootRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -46,6 +57,20 @@ function StreamCarousel() {
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
   }, []);
+
+  useEffect(() => {
+    setIsOffline(!navigator.onLine);
+    const onOnline = () => { setIsOffline(false); setVideoError(false); };
+    const onOffline = () => setIsOffline(true);
+    window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
+    return () => {
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
+    };
+  }, []);
+
+  useEffect(() => { setVideoError(false); }, [activeIndex]);
 
   useEffect(() => () => { if (tooltipTimer.current) clearTimeout(tooltipTimer.current); }, []);
 
@@ -85,6 +110,16 @@ function StreamCarousel() {
     else if (delta > 60) goToStream((activeIndex - 1 + streams.length) % streams.length);
   };
 
+  const onTouchStart = (e: React.TouchEvent) => { dragStartX.current = e.touches[0].clientX; };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (dragStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - dragStartX.current;
+    dragStartX.current = null;
+    if (delta < -60) goToStream((activeIndex + 1) % streams.length);
+    else if (delta > 60) goToStream((activeIndex - 1 + streams.length) % streams.length);
+  };
+
   const onMouseEnter = () => {
     if (!tooltipRef.current) return;
     if (tooltipTimer.current) clearTimeout(tooltipTimer.current);
@@ -117,6 +152,8 @@ function StreamCarousel() {
       onMouseUp={onMouseUp}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
       onDragStart={(e) => e.preventDefault()}
     >
       {/* Tooltip — aparece brevemente al hacer hover */}
@@ -154,15 +191,42 @@ function StreamCarousel() {
         }}
       >
         <div ref={innerRef} style={{ position: "absolute", inset: 0 }}>
-          {/* pointer-events:none en el iframe para que los eventos de mouse
-              pasen al wrapper y funcionen el drag, scroll y hover */}
-          <iframe
-            src={streams[activeIndex].url}
-            style={{ width: "100%", height: "100%", border: "none", display: "block", pointerEvents: "none" }}
-            allowFullScreen
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            title={`Programación visual en vivo — ${streams[activeIndex].label}`}
-          />
+          {isOffline ? (
+            <div style={{
+              width: "100%", height: "100%", display: "flex", flexDirection: "column",
+              alignItems: "center", justifyContent: "center", gap: "0.5rem",
+              background: "rgba(10,10,10,0.95)", padding: "2rem", textAlign: "center",
+            }}>
+              <p style={{ fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--coral)", opacity: 0.7 }}>
+                Sin conexión
+              </p>
+              <p style={{ fontSize: "0.85rem", color: "var(--crema)", opacity: 0.55, lineHeight: 1.5 }}>
+                Parece que estás sin conexión :(
+              </p>
+            </div>
+          ) : videoError ? (
+            <div style={{
+              width: "100%", height: "100%", display: "flex", flexDirection: "column",
+              alignItems: "center", justifyContent: "center", gap: "0.5rem",
+              background: "rgba(10,10,10,0.95)", padding: "2rem", textAlign: "center",
+            }}>
+              <p style={{ fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--azul)", opacity: 0.7 }}>
+                Próximamente
+              </p>
+              <p style={{ fontSize: "0.85rem", color: "var(--crema)", opacity: 0.55, lineHeight: 1.5 }}>
+                Estamos trabajando en brindarte la mejor experiencia interactiva.
+              </p>
+            </div>
+          ) : (
+            <iframe
+              src={streams[activeIndex].url}
+              style={{ width: "100%", height: "100%", border: "none", display: "block", pointerEvents: "none" }}
+              allowFullScreen
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              title={`Programación visual en vivo — ${streams[activeIndex].label}`}
+              onError={() => setVideoError(true)}
+            />
+          )}
         </div>
       </div>
 
@@ -499,6 +563,8 @@ export default function HeroSection() {
             grid-template-areas: "text" "carousel" "btn" !important;
             grid-template-rows: auto !important;
             padding-top: 6rem !important;
+            padding-left: 2rem !important;
+            padding-right: 2rem !important;
             row-gap: 2.5rem !important;
           }
           section[data-hero] [data-stream-carousel] {
